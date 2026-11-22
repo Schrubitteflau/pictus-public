@@ -1,0 +1,55 @@
+/* Shared by every page: the app's fonts and colors (eloquent-app/src/constants/theme.ts), base text, footer. */
+@font-face { font-family: "DM Serif Display"; src: url("/assets/fonts/DMSerifDisplay_400Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Serif Display"; src: url("/assets/fonts/DMSerifDisplay_400Regular_Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/assets/fonts/Inter_400Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/assets/fonts/Inter_600SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+
+:root {
+  --foret: #245644;
+  --foret-tint: #e1e5d9;
+  --papier: #faf9f4;
+  --raised: #ffffff;
+  --sable: #eae5dc;
+  --argile: #d8d0c4;
+  --encre: #1d2424;
+  --pierre: #6b706d;
+  --serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--papier);
+  color: var(--encre);
+  font: 400 17px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+footer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+  font-size: 14px;
+  color: var(--pierre);
+}
+footer em { font: italic 400 16px/1.4 var(--serif); }
+footer nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+footer a { color: inherit; text-decoration: none; }
+footer a:hover { color: var(--foret); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 600px) {
+  footer { justify-content: center; text-align: center; }
+  footer nav { justify-content: center; }
+}

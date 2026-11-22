@@ -17,7 +17,7 @@ Everything but the App Store badge comes from the app repository (`../eloquent-a
 - `assets/app-store-badge.svg` - Apple's official French badge, from the App Store marketing toolbox.
 - `assets/fonts/` - DM Serif Display and Inter, the app's fonts (SIL Open Font License, texts alongside). Self-hosted so that no visitor data reaches Google Fonts, in line with the privacy policy.
 
-Colors are the app's design tokens (`src/constants/theme.ts`).
+Colors are the app's design tokens (`src/constants/theme.ts`), declared once with the fonts and the footer in [`assets/site.css`](assets/site.css), which every page loads.
 
 ## Preview locally
 
