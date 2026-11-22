@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="205 205 614 614">
+  <!-- Pictus logo redrawn from the Classique icon (block 47): three rays, the spark, the open book.
+       Only filled shapes, no strokes: the rays are 19-wide capsules, so every tool renders the logo the same way.
+       Symmetric around x = 512. Colors of the standalone logo, written on each shape so that any tool renders them;
+       scripts/app-icons.mjs recolors the classes per icon with a <style>, which wins over these attributes. -->
+  <path class="rayons" fill="#234e42"
+    d="M502.5 246L502.5 320A9.5 9.5 0 0 0 521.5 320L521.5 246A9.5 9.5 0 0 0 502.5 246ZM346.56 337.99L390.06 384.49A9.5 9.5 0 0 0 403.94 371.51L360.44 325.01A9.5 9.5 0 0 0 346.56 337.99ZM663.56 325.01L620.06 371.51A9.5 9.5 0 0 0 633.94 384.49L677.44 337.99A9.5 9.5 0 0 0 663.56 325.01Z"/>
+  <path class="eclat" fill="#234e42"
+    d="M512 361C527.9 407.9 536.4 433.1 598 455.5C536.6 478.1 528.8 500.7 512 547C495.2 500.7 487.4 478.1 426 455.5C487.6 433.1 496.1 407.9 512 361Z"/>
+  <path class="livre" fill="#234e42"
+    d="M236 525C366.4 530.2 463.6 598.6 512 747C560.4 598.6 657.6 530.2 788 525V692C675.7 687.6 590.7 699.5 512 784C433.3 699.5 348.3 687.6 236 692Z"/>
+  <path class="livre" fill="#234e42"
+    d="M278 470C386.6 476.2 473.7 548 502 684C455.7 580.9 379 520.7 278 510ZM746 470C637.4 476.2 550.3 548 522 684C568.3 580.9 645 520.7 746 510Z"/>
+</svg>

@@ -2,12 +2,263 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pictus</title>
-  <meta http-equiv="refresh" content="0; url=/confidentialite/">
-  <link rel="canonical" href="https://getpictus.app/confidentialite/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pictus - Le vocabulaire en images</title>
+  <meta name="description" content="Pictus, l'app qui enrichit votre vocabulaire : chaque mot devient une illustration, revue au bon moment pour qu'il reste. Sur l'App Store.">
+  <link rel="canonical" href="https://getpictus.app/">
+  <meta name="theme-color" content="#faf9f4">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://getpictus.app/">
+  <meta property="og:title" content="Pictus - Le vocabulaire en images">
+  <meta property="og:description" content="Chaque mot devient une illustration, revue au bon moment pour qu'il reste. Sur l'App Store.">
+  <meta property="og:image" content="https://getpictus.app/assets/icon.png">
+  <meta property="og:locale" content="fr_FR">
+  <link rel="preload" href="/assets/fonts/DMSerifDisplay_400Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <style>
+    /* Fonts and colors of the app's design system (eloquent-app/src/constants/theme.ts). */
+    @font-face { font-family: "DM Serif Display"; src: url("/assets/fonts/DMSerifDisplay_400Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: "DM Serif Display"; src: url("/assets/fonts/DMSerifDisplay_400Regular_Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+    @font-face { font-family: "Inter"; src: url("/assets/fonts/Inter_400Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Inter"; src: url("/assets/fonts/Inter_600SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+
+    :root {
+      --foret: #245644;
+      --papier: #faf9f4;
+      --raised: #ffffff;
+      --sable: #eae5dc;
+      --argile: #d8d0c4;
+      --encre: #1d2424;
+      --pierre: #6b706d;
+      --serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --card: 176px;
+      --gap: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background: var(--papier);
+      color: var(--encre);
+      font: 400 17px/1.6 var(--sans);
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Wall of word cards drifting behind the hero, rows alternating direction. */
+    .wall {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--gap);
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .row { display: flex; width: max-content; animation: drift 120s linear infinite; }
+    .row:nth-child(even) { animation-direction: reverse; animation-duration: 140s; }
+    .row:nth-child(3) { animation-duration: 160s; }
+    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .row { animation: none; } }
+
+    .card {
+      flex: none;
+      width: var(--card);
+      margin-right: var(--gap);
+      padding: 10px 10px 12px;
+      background: var(--raised);
+      border: 1px solid var(--argile);
+      border-radius: 16px;
+      box-shadow: 0 1px 2px rgba(29, 36, 36, 0.06), 0 2px 8px rgba(29, 36, 36, 0.04);
+      transform: rotate(-2deg);
+    }
+    .card:nth-child(even) { transform: rotate(1.5deg) translateY(6px); }
+    .card:nth-child(3n) { transform: rotate(-1deg) translateY(-4px); }
+    .card img { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 10px; background: var(--sable); }
+    .card b { display: block; margin-top: 8px; font: 400 20px/1.15 var(--serif); }
+    .card small { display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 600 11px/1.4 var(--sans); color: var(--pierre); }
+
+    /* Paper veil: the wall stays a texture, the hero reads on plain paper. */
+    .veil {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 46% 54% at 50% 50%, var(--papier) 45%, rgba(250, 249, 244, 0.9) 62%, rgba(250, 249, 244, 0) 100%),
+        linear-gradient(var(--papier), rgba(250, 249, 244, 0) 14%, rgba(250, 249, 244, 0) 76%, var(--papier) 95%);
+    }
+
+    main {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 16px 48px;
+      text-align: center;
+    }
+    .logo { width: 76px; height: 76px; }
+    .name {
+      margin: 18px 0 0;
+      font: 600 13px/1 var(--sans);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--foret);
+    }
+    h1 {
+      margin: 18px 0 0;
+      font: 400 clamp(46px, 8vw, 76px)/1.02 var(--serif);
+      letter-spacing: -0.01em;
+    }
+    h1 em { font-style: italic; color: var(--foret); }
+    .lead {
+      max-width: 30em;
+      margin: 22px 0 0;
+      font-size: 18px;
+      color: var(--pierre);
+    }
+
+    /* Apple's official badge, unaltered (App Store marketing guidelines). */
+    .store { display: block; margin-top: 34px; border-radius: 10px; }
+    .store img { display: block; width: auto; height: 54px; }
+    .store:focus-visible { outline: 2px solid var(--foret); outline-offset: 4px; }
+    .note { margin: 14px 0 0; font-size: 14px; color: var(--pierre); }
+
+    footer {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px 24px;
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+      font-size: 14px;
+      color: var(--pierre);
+    }
+    footer em { font: italic 400 16px/1.4 var(--serif); }
+    footer nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--foret); text-decoration: underline; text-underline-offset: 3px; }
+
+    @media (max-width: 600px) {
+      :root { --card: 140px; --gap: 16px; }
+      .card b { font-size: 17px; }
+      .lead { font-size: 17px; }
+      .veil {
+        background:
+          radial-gradient(ellipse 90% 52% at 50% 48%, var(--papier) 52%, rgba(250, 249, 244, 0.88) 70%, rgba(250, 249, 244, 0) 100%),
+          linear-gradient(var(--papier), rgba(250, 249, 244, 0) 12%, rgba(250, 249, 244, 0) 74%, var(--papier) 94%);
+      }
+      footer { justify-content: center; text-align: center; }
+      footer nav { justify-content: center; }
+    }
+  </style>
 </head>
 <body>
-  <p><a href="/confidentialite/">Politique de confidentialité de Pictus</a></p>
+  <div class="wall" aria-hidden="true">
+    <div class="row">
+      <div class="card"><img src="/assets/mots/atre.webp" alt="" width="360" height="360" decoding="async"><b>Âtre</b><small>Nom masculin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/flaner.webp" alt="" width="360" height="360" decoding="async"><b>Flâner</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/bruine.webp" alt="" width="360" height="360" decoding="async"><b>Bruine</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/bivouac.webp" alt="" width="360" height="360" decoding="async"><b>Bivouac</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/canopee.webp" alt="" width="360" height="360" decoding="async"><b>Canopée</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/chatoyant.webp" alt="" width="360" height="360" decoding="async"><b>Chatoyant</b><small>Adjectif · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/clapotis.webp" alt="" width="360" height="360" decoding="async"><b>Clapotis</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/crepuscule.webp" alt="" width="360" height="360" decoding="async"><b>Crépuscule</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/atre.webp" alt="" width="360" height="360" decoding="async"><b>Âtre</b><small>Nom masculin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/flaner.webp" alt="" width="360" height="360" decoding="async"><b>Flâner</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/bruine.webp" alt="" width="360" height="360" decoding="async"><b>Bruine</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/bivouac.webp" alt="" width="360" height="360" decoding="async"><b>Bivouac</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/canopee.webp" alt="" width="360" height="360" decoding="async"><b>Canopée</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/chatoyant.webp" alt="" width="360" height="360" decoding="async"><b>Chatoyant</b><small>Adjectif · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/clapotis.webp" alt="" width="360" height="360" decoding="async"><b>Clapotis</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/crepuscule.webp" alt="" width="360" height="360" decoding="async"><b>Crépuscule</b><small>Nom masculin · Courant</small></div>
+    </div>
+    <div class="row">
+      <div class="card"><img src="/assets/mots/aube.webp" alt="" width="360" height="360" decoding="async"><b>Aube</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/emmitoufler.webp" alt="" width="360" height="360" decoding="async"><b>Emmitoufler</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/farniente.webp" alt="" width="360" height="360" decoding="async"><b>Farniente</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/fredonner.webp" alt="" width="360" height="360" decoding="async"><b>Fredonner</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/guinguette.webp" alt="" width="360" height="360" decoding="async"><b>Guinguette</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/lezarder.webp" alt="" width="360" height="360" decoding="async"><b>Lézarder</b><small>Verbe · Familier</small></div>
+      <div class="card"><img src="/assets/mots/bouquiner.webp" alt="" width="360" height="360" decoding="async"><b>Bouquiner</b><small>Verbe · Familier</small></div>
+      <div class="card"><img src="/assets/mots/quietude.webp" alt="" width="360" height="360" decoding="async"><b>Quiétude</b><small>Nom féminin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/aube.webp" alt="" width="360" height="360" decoding="async"><b>Aube</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/emmitoufler.webp" alt="" width="360" height="360" decoding="async"><b>Emmitoufler</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/farniente.webp" alt="" width="360" height="360" decoding="async"><b>Farniente</b><small>Nom masculin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/fredonner.webp" alt="" width="360" height="360" decoding="async"><b>Fredonner</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/guinguette.webp" alt="" width="360" height="360" decoding="async"><b>Guinguette</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/lezarder.webp" alt="" width="360" height="360" decoding="async"><b>Lézarder</b><small>Verbe · Familier</small></div>
+      <div class="card"><img src="/assets/mots/bouquiner.webp" alt="" width="360" height="360" decoding="async"><b>Bouquiner</b><small>Verbe · Familier</small></div>
+      <div class="card"><img src="/assets/mots/quietude.webp" alt="" width="360" height="360" decoding="async"><b>Quiétude</b><small>Nom féminin · Soutenu</small></div>
+    </div>
+    <div class="row">
+      <div class="card"><img src="/assets/mots/serendipite.webp" alt="" width="360" height="360" decoding="async"><b>Sérendipité</b><small>Nom féminin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/somnoler.webp" alt="" width="360" height="360" decoding="async"><b>Somnoler</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/tonnelle.webp" alt="" width="360" height="360" decoding="async"><b>Tonnelle</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/volute.webp" alt="" width="360" height="360" decoding="async"><b>Volute</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/zephyr.webp" alt="" width="360" height="360" decoding="async"><b>Zéphyr</b><small>Nom masculin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/revasser.webp" alt="" width="360" height="360" decoding="async"><b>Rêvasser</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/dorloter.webp" alt="" width="360" height="360" decoding="async"><b>Dorloter</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/serendipite.webp" alt="" width="360" height="360" decoding="async"><b>Sérendipité</b><small>Nom féminin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/somnoler.webp" alt="" width="360" height="360" decoding="async"><b>Somnoler</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/tonnelle.webp" alt="" width="360" height="360" decoding="async"><b>Tonnelle</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/volute.webp" alt="" width="360" height="360" decoding="async"><b>Volute</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/zephyr.webp" alt="" width="360" height="360" decoding="async"><b>Zéphyr</b><small>Nom masculin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/revasser.webp" alt="" width="360" height="360" decoding="async"><b>Rêvasser</b><small>Verbe · Courant</small></div>
+      <div class="card"><img src="/assets/mots/dorloter.webp" alt="" width="360" height="360" decoding="async"><b>Dorloter</b><small>Verbe · Courant</small></div>
+    </div>
+    <div class="row">
+      <div class="card"><img src="/assets/mots/papoter.webp" alt="" width="360" height="360" decoding="async"><b>Papoter</b><small>Verbe · Familier</small></div>
+      <div class="card"><img src="/assets/mots/festoyer.webp" alt="" width="360" height="360" decoding="async"><b>Festoyer</b><small>Verbe · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/placide.webp" alt="" width="360" height="360" decoding="async"><b>Placide</b><small>Adjectif · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/reminiscence.webp" alt="" width="360" height="360" decoding="async"><b>Réminiscence</b><small>Nom féminin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/mansarde.webp" alt="" width="360" height="360" decoding="async"><b>Mansarde</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/ribambelle.webp" alt="" width="360" height="360" decoding="async"><b>Ribambelle</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/bucolique.webp" alt="" width="360" height="360" decoding="async"><b>Bucolique</b><small>Adjectif · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/papoter.webp" alt="" width="360" height="360" decoding="async"><b>Papoter</b><small>Verbe · Familier</small></div>
+      <div class="card"><img src="/assets/mots/festoyer.webp" alt="" width="360" height="360" decoding="async"><b>Festoyer</b><small>Verbe · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/placide.webp" alt="" width="360" height="360" decoding="async"><b>Placide</b><small>Adjectif · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/reminiscence.webp" alt="" width="360" height="360" decoding="async"><b>Réminiscence</b><small>Nom féminin · Soutenu</small></div>
+      <div class="card"><img src="/assets/mots/mansarde.webp" alt="" width="360" height="360" decoding="async"><b>Mansarde</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/ribambelle.webp" alt="" width="360" height="360" decoding="async"><b>Ribambelle</b><small>Nom féminin · Courant</small></div>
+      <div class="card"><img src="/assets/mots/bucolique.webp" alt="" width="360" height="360" decoding="async"><b>Bucolique</b><small>Adjectif · Soutenu</small></div>
+    </div>
+  </div>
+  <div class="veil" aria-hidden="true"></div>
+
+  <main>
+    <img class="logo" src="/assets/logo.svg" alt="">
+    <p class="name">Pictus</p>
+    <h1>Le vocabulaire <br><em>en images.</em></h1>
+    <p class="lead">Chaque mot devient une illustration à retenir. Pictus vous le remontre au bon moment, pour qu’il reste, et pour toujours trouver le mot juste.</p>
+    <a class="store" href="https://www.apple.com/fr/app-store/">
+      <img src="/assets/app-store-badge.svg" alt="Télécharger dans l’App Store" width="171" height="54">
+    </a>
+    <p class="note">Pour iPhone, en français.</p>
+  </main>
+
+  <footer>
+    <em>© 2026 Pictus</em>
+    <nav>
+      <a href="/confidentialite/">Confidentialité</a>
+      <a href="/confidentialite/#mentions-legales">Mentions légales</a>
+      <a href="mailto:contact@getpictus.app">Contact</a>
+    </nav>
+  </footer>
 </body>
 </html>
